@@ -15,3 +15,6 @@ export const addItemtoCart = (cartItems, cartItemToAdd) => {
     return [...cartItems,{...cartItemToAdd,quantity:1}]
 
 };
+
+
+// it allow us to group tjhe cart item into quantity
