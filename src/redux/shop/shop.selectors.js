@@ -12,19 +12,20 @@ export const selectCollections = createSelector(
 export const selectCollectionsForPreview = createSelector(
     [selectCollections],
     collections => Object.Keys[collections].map(key => collections[key])
+    //Object.Keys :this method gives the array of keys of object
 )
 
-export const selectCollection = collectionUrlParam => 
-createSelector(
-    [selectCollections],
-    collections => collections[collectionUrlParam]
-)
+export const selectCollection = collectionUrlParam =>
+    createSelector(
+        [selectCollections],
+        collections => collections[collectionUrlParam]
+    )
 
 
 /**
  * Our url parameter is string and the id we have to match is a number
  * so we write a map COLLECTION_ID_MAP which object whaere string value goes to id
- * 
+ *
  */
 
 // const COLLECTION_ID_MAP = {
