@@ -1,15 +1,18 @@
 import React from 'react';
 import { Switch, Route,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import './App.css';
 
 import Homepage from './pages/homepage/homepage.component';
 import Shoppage from './pages/shoppage/shop.comonent';
-import SignInAndSignUp from './pages/Sign-in-and-Sign-up/Sign-in-and-Sign-up'
+import SignInAndSignUpPage from './pages/Sign-in-and-Sign-up/Sign-in-and-Sign-up'
 import Header from './components/header/header.component';
+import CheckoutPage from './pages/checkout/checkout.component'
 import { auth, createUserProfiledocument } from './firebase/firebase.utils'
-import { setCurrentUser } from './redux/user/user.actions'
+import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selector'
 
 const HatsPage = () => (
   <div>
@@ -53,12 +56,14 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route exact path='/' component={Homepage} />
-          <Route exact path='/shop' component={Shoppage} />
+          <Route path='/shop' component={Shoppage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
+
           <Route exact path='/signIn'  render={() => 
             this.props.currentUser ? (
               <Redirect to="" />
               ) : (
-                <SignInAndSignUp />
+                <SignInAndSignUpPage />
                 )
               }
               />
@@ -73,8 +78,8 @@ class App extends React.Component {
 }
 
 // we have access to this.props.currentUser due to mapStateToProps method
-const mapStateToProps = ({user}) => ({
-  currentUser:user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser:selectCurrentUser
 })
 
 const mapDispathToProps = dispatch => ({

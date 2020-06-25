@@ -1,12 +1,23 @@
 import { createStore,applyMiddleware} from 'redux';
 // middleware is between acrions and root reducers
+// for local and session storage
+import {persistStore} from 'redux-persist';
+
 import logger from 'redux-logger';
 
 import rootReducer from './root-reducer';
 
 const middleware = [logger];
 
-const store = createStore(rootReducer,applyMiddleware(...middleware));
+export const store = createStore(rootReducer,applyMiddleware(...middleware));
 
-export default store;
+// it calls persist store passing  in our store
+export const persistor =persistStore(store);
+// this is new persisted version of store
+export default {store,persistor};
+
+
+
+
+// while using persister you also have to edit root reducer
 
