@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // connect is higher order component that let us to modify our component have access to  to the things related to redux
 import { createStructuredSelector } from 'reselect'
@@ -10,31 +9,32 @@ import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 import './header.styles.scss';
+import { HeaderContainer,LogoContainer,OptionsContainer,OptionLink} from './header.styles'
 const Header = ({currentUser,hidden}) => (
-    <div className='header'>
-        <Link className='logo-container' to="/">
+    <HeaderContainer>
+        <LogoContainer  to="/">
             <Logo className='logo' />
-        </Link>
-        <div className='options'>
-            <Link className='option' to='/shop'>
+        </LogoContainer>
+        <OptionsContainer >
+            <OptionLink  to='/shop'>
                 Shop
-            </Link>
-            <Link >
+            </OptionLink>
+            <OptionLink >
                 Contact
-            </Link>
+            </OptionLink>
             {
                 currentUser ? (
-                <div className='option' onClick={() => auth.signOut()}>SIGN OUT</div>
+                <OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionLink>
                  ) :(
-                <Link className='option' to='/signin'>SIGN In</Link>
+                <OptionLink className='option' to='/signin'>SIGN In</OptionLink>
                  )}
                  <CartIcon/>
-        </div>
+        </OptionsContainer>
         {
             hidden ? null : <CartDropdown/>
 
         }
-    </div>
+    </HeaderContainer>
 )
 
 // this state is root0reducer
@@ -53,3 +53,7 @@ const mapStateToProps = createStructuredSelector({
 export default connect(mapStateToProps)(Header);
 
 // connet requires 2 functions second one is optional ,and that gives us back other higher component that we passed as Header
+
+//<OptionDiv onClick={() => auth.signOut()}>SIGN OUT</OptionDiv>
+
+//we can use this as //<OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionDiv>

@@ -33,7 +33,7 @@ export const createUserProfiledocument = async (userAuth, additionalData) => {
                 ...additionalData
             })
         } catch (error) {
-            console.log('error creating user:',error);
+            console.log('error creating user:', error);
         }
     }
     // console.log("snapshot",snapShot)
@@ -41,6 +41,35 @@ export const createUserProfiledocument = async (userAuth, additionalData) => {
 }
 
 firebase.initializeApp(firebaseConfig);
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey);
+    console.log("colref", collectionRef)
+    const batch = firestore.batch();
+    objectsToAdd.forEach(obj => {
+        const newDocRef = collectionRef.doc();
+        batch.set(newDocRef, obj)
+    })
+    return await batch.commit()
+}
+// firestore batch just let us to bach all the reqesr at one and send it to db at once instead of sending differntly
+export const convertCollectionsSnapshotToMap = (collections) => {
+    //we are getting array of items an dwe want it in form of object
+    const transformedCollection = collections.docs.map(doc => {
+        const { title, items } = doc.data();
+
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title,
+            items
+        }
+    });
+    return transformedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    }, {});
+}
 
 export const auth = firebase.auth();
 
