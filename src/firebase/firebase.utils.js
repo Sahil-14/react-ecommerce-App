@@ -70,15 +70,24 @@ export const convertCollectionsSnapshotToMap = (collections) => {
         return accumulator;
     }, {});
 }
+// functionality when we won't have firebase as a backend
+export const getCurrentUser = () => {
+    return new Promise((resolve,reject) => {
+        const unsubscribe = auth.onAuthStateChanged(userAuth  => {
+            unsubscribe();
+            resolve(userAuth);
+        },reject)
+    })   
+}
 
 export const auth = firebase.auth();
 
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-provider.setCustomParameters({ prompt: 'select_account' });
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-export const signInwithGoogle = () => auth.signInWithPopup(provider);
+export const signInwithGoogle = () => auth.signInWithPopup(googleProvider);
 
 export default firebase;

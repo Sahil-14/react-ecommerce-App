@@ -10,20 +10,30 @@ export const selectCollections = createSelector(
 );
 
 export const selectCollectionsForPreview = createSelector(
-  [selectCollections],
-  collections => collections? Object.keys(collections).map(key => collections[key]):[]
+    [selectCollections],
+    collections => collections ? Object.keys(collections).map(key => collections[key]) : []
 );
 
 
 export const selectCollection = collectionUrlParam =>
     createSelector(
         [selectCollections],
-        collections => collections? collections[collectionUrlParam] :null
+        collections => collections ? collections[collectionUrlParam] : null
     )
 
+export const selectIsCollectionFetching = createSelector(
+    [selectShop],
+   shop  => shop.isFetching
+)
+
+export const selectIsCollectionLoaded = createSelector(
+    [selectShop],
+    shop => !!shop.collections
+)
 
 
-      
+
+
 /**
  * Our url parameter is string and the id we have to match is a number
  * so we write a map COLLECTION_ID_MAP which object whaere string value goes to id

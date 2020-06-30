@@ -7,5 +7,5 @@ const selectUser = state => state.user;
 // instead of passing array we can also pass it as indivisual argument
 export const selectCurrentUser = createSelector(
 [selectUser],
-(user) => user.currentUser
+user => user.currentUser
 );

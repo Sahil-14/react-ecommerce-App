@@ -8,26 +8,28 @@ import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selector';
-import './header.styles.scss';
-import { HeaderContainer,LogoContainer,OptionsContainer,OptionLink} from './header.styles'
-const Header = ({currentUser,hidden}) => (
+import { signOutStart } from '../../redux/user/user.actions'
+import { 
+    HeaderContainer,
+    LogoContainer,
+    OptionsContainer,
+    OptionLink
+} from './header.styles'
+const Header = ({currentUser,hidden,signOutStart}) => (
     <HeaderContainer>
         <LogoContainer  to="/">
             <Logo className='logo' />
         </LogoContainer>
         <OptionsContainer >
-            <OptionLink  to='/shop'>
-                Shop
-            </OptionLink>
-            <OptionLink >
-                Contact
-            </OptionLink>
-            {
-                currentUser ? (
-                <OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionLink>
-                 ) :(
-                <OptionLink className='option' to='/signin'>SIGN In</OptionLink>
-                 )}
+            <OptionLink  to='/shop'>Shop</OptionLink>
+            <OptionLink >Contact</OptionLink>
+            {currentUser ? (
+                <OptionLink as='div' onClick={signOutStart}>
+                  SIGN OUT
+                </OptionLink>
+              ) : (
+                <OptionLink to='/signin'>SIGN IN</OptionLink>
+              )}
                  <CartIcon/>
         </OptionsContainer>
         {
@@ -43,6 +45,10 @@ const mapStateToProps = createStructuredSelector({
     currentUser:selectCurrentUser,
     hidden:selectCartHidden
 })
+
+const mapDispatchToProps = dispatch => ({
+    signOutStart:() => dispatch(signOutStart())
+})
 // this is nested destructuring of an object we state as a parent object from root-reducer{user:{currentUser},}
 // inside that we have user teducer and from user we are destructuring currentuser
 //===== createStructuredSelector ===  it passes top level state directly
@@ -50,7 +56,7 @@ const mapStateToProps = createStructuredSelector({
 // const mapStateToProps = (state)  => ({
 //     cartItems:selectCartItems(state)
 // })
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps,mapDispatchToProps)(Header);
 
 // connet requires 2 functions second one is optional ,and that gives us back other higher component that we passed as Header
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route,Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -11,8 +11,8 @@ import SignInAndSignUpPage from './pages/Sign-in-and-Sign-up/Sign-in-and-Sign-up
 import Header from './components/header/header.component';
 import CheckoutPage from './pages/checkout/checkout.component'
 import { auth, createUserProfiledocument } from './firebase/firebase.utils'
-import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
+import { checkUserSession } from './redux/user/user.actions'
 
 
 
@@ -22,25 +22,9 @@ class App extends React.Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
+    const { checkUserSession } = this.props;
+    checkUserSession();
 
-    const {setCurrentUser} = this.props;
-    // const {setCurrentUser,collectionsArray} = this.props;
-
-
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        const userRef = await createUserProfiledocument(userAuth);
-        userRef.onSnapshot(snapshot => {
-          setCurrentUser ({
-              id: snapshot.id,
-              ...snapshot.data()
-            });
-        });
-      } else {
-        setCurrentUser( userAuth )   // this is equivalent to set current user to null
-        // addCollectionAndDocuments('collections',collectionsArray.map(({title,items}) =>({title,items})) )
-      }
-    })
   }
 
 
@@ -57,14 +41,14 @@ class App extends React.Component {
           <Route path='/shop' component={Shoppage} />
           <Route exact path='/checkout' component={CheckoutPage} />
 
-          <Route exact path='/signIn'  render={() => 
+          <Route exact path='/signIn' render={() =>
             this.props.currentUser ? (
               <Redirect to="" />
-              ) : (
+            ) : (
                 <SignInAndSignUpPage />
-                )
-              }
-              />
+              )
+          }
+          />
 
 
         </Switch>
@@ -77,12 +61,14 @@ class App extends React.Component {
 
 // we have access to this.props.currentUser due to mapStateToProps method
 const mapStateToProps = createStructuredSelector({
-  currentUser:selectCurrentUser,
+  currentUser: selectCurrentUser,
   // collectionsArray:selectCollectionsForPreview
 })
 
-const mapDispathToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession())
 })
 
-export default connect(mapStateToProps,mapDispathToProps)(App);
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
