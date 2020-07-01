@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CollectionPageContainer from '../collection/collection.container'
@@ -6,27 +6,25 @@ import CollectionsOverviewContainer from '../../components/collections-overview/
 import { fetchCollectionStart } from '../../redux/shop/shop.actions';
 
 
-class Shoppage extends React.Component {
+const Shoppage = ({match,fetchCollectionStart}) => {
 
-    componentDidMount() {
-        const {fetchCollectionStart} = this.props;
-        fetchCollectionStart();
-    }
+    useEffect(() => {
+        fetchCollectionStart()
+    },[fetchCollectionStart]);
+    // this will render component only if we fire fetchCollectionStart, otherwise it will rerendeer it when there is chage in parent component
 
-    render() {
-        const { match } = this.props;
-        return (
-            
-            <div className='shop-page'>
-                <Route exact path={`${match.path}`}
-                        component={CollectionsOverviewContainer}
-                     />
-                <Route path={`${match.path}/:collectionId`}
-                        component={CollectionPageContainer}
-                />
-            </div>
-        )
-    }
+    return (
+
+        <div className='shop-page'>
+            <Route exact path={`${match.path}`}
+                component={CollectionsOverviewContainer}
+            />
+            <Route path={`${match.path}/:collectionId`}
+                component={CollectionPageContainer}
+            />
+        </div>
+    )
+
 }
 
 
